@@ -10,7 +10,7 @@ Node.js and npm installed
 
 Clone this repo and install dependencies:
 ```
-
+git clone git@github.com:jamesmitchard/bradish-moved-bot.git
 npm i
 ```
 
