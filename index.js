@@ -1,5 +1,8 @@
-const request = require('request');
-const rp = require('request-promise');
+// const request = require('request');
+// const rp = require('request-promise');
+// const errors = require('request-promise/errors');
+import got from 'got';
+
 
 async function runMe() {
 
@@ -7,8 +10,7 @@ async function runMe() {
     let winning = false;
 
     do {
-
-        const page =  await rp({method: 'GET', url: url});
+        const page = (await got(url)).body;
 
         if (page.indexOf('You found me!') !== -1) {
             console.log('Boom...\n');
