@@ -11,7 +11,7 @@ async function runMe() {
         const page =  await rp({method: 'GET', url: url});
 
         if (page.indexOf('You found me!') !== -1) {
-            console.log('Boom...\n' + page);
+            console.log('Boom...\n');
             winning = true;
         }
 
