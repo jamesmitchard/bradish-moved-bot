@@ -1,8 +1,4 @@
-// const request = require('request');
-// const rp = require('request-promise');
-// const errors = require('request-promise/errors');
 import got from 'got';
-
 
 async function runMe() {
 
@@ -10,7 +6,16 @@ async function runMe() {
     let winning = false;
 
     do {
-        const page = (await got(url)).body;
+        const page = (await got(url, {
+            retry: {
+                limit: Number.MAX_SAFE_INTEGER,
+                calculateDelay: ({computedValue}) => computedValue / 10,
+                backoffLimit: 500
+            },
+            hooks: {
+                beforeRetry: [(error, retryCount) => console.log(`Retrying [${retryCount}]: ${error.code}`)]
+            }
+        })).body;
 
         if (page.indexOf('You found me!') !== -1) {
             console.log('Boom...\n');
