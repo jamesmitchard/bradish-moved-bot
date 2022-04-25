@@ -15,22 +15,18 @@ async function runMe() {
             hooks: {
                 beforeRetry: [(error, retryCount) => console.log(`Retrying [${retryCount}]: ${error.code}`)]
             }
-        })).body;
+        })).body.replace(/(\r\n|\n|\r)/gm, '');
 
-        if (page.indexOf('You found me!') !== -1) {
-            console.log('Boom...\n');
-            winning = true;
-        }
+        if (page.indexOf('You found me!') !== -1) winning = true;
 
-        const lines = page.split('\n');
-        const nextUuid = lines[(winning ? 7 : 6)].match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/)[1];
-        const ts = lines[(winning ? 11 : 7)].match(winning ? /since (.*)</ : /in (.*)</)[1];
-        const visitors = lines[(winning ? 12 : 8)].match(/far ([0-9]+) visitor/)[1];
-        const steps = lines[(winning ? 13: 9)].match(/takes ([0-9]+) step/)[1];
-            
-        console.log(`${winning ? 'Trend setting. ' : ''}Step ${steps} achieved ${ts} by ${visitors} visitors at ${nextUuid}`);
+        const nextUuid = page.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/)[1];
+        const ts = page.match(/([0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}, [0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2} (A|P)M)/)[1];
+        const visitors = page.match(/far ([0-9]+) visitor/)[1];
+        const steps = page.match(/takes ([0-9]+) step/)[1];
 
-        url = `https://moved.bradi.sh/${nextUuid}`        
+        console.log(`${winning ? 'One small step for me, one giant leap for https://moved.bradi.sh ' : ''}Step ${steps} achieved ${ts} by ${visitors} visitors at ${nextUuid}`);
+
+        url = `https://moved.bradi.sh/${nextUuid}`          
     } while (true)
 }
 
